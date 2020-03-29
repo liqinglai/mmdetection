@@ -16,10 +16,10 @@ from mmdet.datasets import build_dataset
 from mmdet.models import build_detector
 from mmdet.utils import collect_env, get_root_logger
 
-
+#参数解析器，终端命令行运行一个demo.py后后面跟的参数（运行tools/train.py可以跟的参数），argparse 模块可以让人轻松编写用户友好的命令行接口
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train a detector')
-    parser.add_argument('config', help='train config file path')
+    parser = argparse.ArgumentParser(description='Train a detector')               #第一步：创建一个解析器
+    parser.add_argument('config', help='train config file path')                   #第二步：添加参数
     parser.add_argument('--work_dir', help='the dir to save logs and models')
     parser.add_argument(
         '--resume_from', help='the checkpoint file to resume from')
