@@ -48,7 +48,7 @@ def parse_args():
         '--autoscale-lr',
         action='store_true',
         help='automatically scale lr with the number of gpus')
-    args = parser.parse_args()
+    args = parser.parse_args()                                         #第三步：解析参数
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
 
@@ -58,12 +58,12 @@ def parse_args():
 def main():
     args = parse_args()
 
-    cfg = Config.fromfile(args.config)
+    cfg = Config.fromfile(args.config)             #源码：mmcv/utils/config.py；功能：接受一个文件，命令行当传入一个config文件时就把模型的配置参数穿打cfg了
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):
         torch.backends.cudnn.benchmark = True
     # update configs according to CLI args
-    if args.work_dir is not None:
+    if args.work_dir is not None:                  #如果没有给存储路径的话，就存到默认路径
         cfg.work_dir = args.work_dir
     if args.resume_from is not None:
         cfg.resume_from = args.resume_from
@@ -112,9 +112,9 @@ def main():
     meta['seed'] = args.seed
 
     model = build_detector(
-        cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
+        cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)             #通过config文件传过来的参数，初始化model参数
 
-    datasets = [build_dataset(cfg.data.train)]
+    datasets = [build_dataset(cfg.data.train)]                                 #数据格式创建
     if len(cfg.workflow) == 2:
         val_dataset = copy.deepcopy(cfg.data.val)
         val_dataset.pipeline = cfg.data.train.pipeline
@@ -128,6 +128,8 @@ def main():
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
+    
+    #这一步直接调用模型，数据，配置文件信息。。。训练，接下来追溯到mmdet/apis/train.py
     train_detector(
         model,
         datasets,
